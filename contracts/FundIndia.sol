@@ -1,25 +1,67 @@
 // SPDX-License-Identifier: MIT
+//Pragmas
 pragma solidity ^0.8.8;
 
+// Imports
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "./PriceConverter.sol";
 
+//Errors
 error NotOwner();
 
+//Interfaces
+
+//Libraries
+
+//Contract
+
+
+/**@title A Contract to fund India.
+ * @author Suraj Choudhary
+  *@notice This contract is used to fund India.
+  *@dev This contract uses prices feeds from Chainlink to convert ETH to USD.
+*/
 contract FundIndia {
+    // Type Declarations
     using PriceConverter for uint256;
+
+    // State Variables
     AggregatorV3Interface public priceFeed;
 
     mapping(address => uint256) public addressToAmountFunded;
     address[] public funders;
 
     // Could we make this constant?  /* hint: no! We should make it immutable! */
-    address public /* immutable */ i_owner;
+    address public immutable i_owner;
     uint256 public constant MINIMUM_USD = 50 * 10 ** 18;
+
+    modifier onlyOwner {
+        // require(msg.sender == owner);
+        if (msg.sender != i_owner) revert NotOwner();
+        _;
+    }
+
+    //Functions Order:
+    //// 1. Constructor
+    //// 2. Receive
+    //// 3. Fallback
+    //// 4. External
+    //// 5. Public
+    //// 6. Internal
+    //// 7. Private
+    //// 8. View / Pure
     
     constructor(address priceFeedAddress) {
         i_owner = msg.sender;
         priceFeed = AggregatorV3Interface(priceFeedAddress);
+    }
+
+    receive() external payable {
+        fund();
+    }
+
+    fallback() external payable {
+        fund();
     }
 
     function fund() public payable {
@@ -31,12 +73,6 @@ contract FundIndia {
     
     function getVersion() public view returns (uint256){
         return priceFeed.version();
-    }
-    
-    modifier onlyOwner {
-        // require(msg.sender == owner);
-        if (msg.sender != i_owner) revert NotOwner();
-        _;
     }
     
     function withdraw() public onlyOwner {
@@ -65,15 +101,6 @@ contract FundIndia {
     //   yes   no
     //  /        \
     //receive()  fallback()
-
-    fallback() external payable {
-        fund();
-    }
-
-    receive() external payable {
-        fund();
-    }
-
 }
 
 // Concepts we didn't cover yet (will cover in later sections)
