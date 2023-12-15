@@ -14,18 +14,25 @@ module.exports = {
         ]
     },
     networks: {
-        hardhat: {},
+        hardhat: {
+            chainId: 1337
+        },
         sepolia: {
             url: process.env.SEPOLIA_RPC_URL,
             accounts: [process.env.PRIVATE_KEY],
+            chainId: 11155111,
+            blockConfirmations: 6,
         },
         localhost: {
             url: process.env.LOCALHOST_RPC_URL,
             chainId: 31337,
         },
     },
+    etherscan: {
+        apiKey: process.env.ETHERSCAN_API_KEY,
+    },
     gasReporter: {
-        enabled: true,
+        enabled: false,
         currency: "USD",
         outputFile: "gas-report.txt",
         noColors: true,

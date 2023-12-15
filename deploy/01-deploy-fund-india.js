@@ -1,5 +1,6 @@
 const { network } = require("hardhat")
 const { networkConfig, developomentChains } = require("../helper-hardhat-config")
+const { verify } = require("../utils/verify")
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
@@ -14,14 +15,20 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         log("Running on Testnet")
         ethUsdPriceFeedAddress = networkConfig[chainId]["ethUsdPriceFeed"]
     }
-
+    const args = [ethUsdPriceFeedAddress]
     const fundIndia = await deploy("FundIndia", {
         from: deployer,
         log: true,
-        args: [ethUsdPriceFeedAddress],
+        args: args,
     })
+
     log(`FundIndia deployed at ${fundIndia.address}`)
     log("--------------------------------------------")
+
+    if (!developomentChains.includes(network.name)) {
+        await verify(fundIndia.address, args)
+        log(`Verified contract at ${fundIndia.address}`)
+    } 
 }
 
 module.exports.tags = ["all", "fundIndia"]
