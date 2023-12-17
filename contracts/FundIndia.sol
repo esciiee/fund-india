@@ -72,7 +72,7 @@ contract FundIndia {
         require(msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD, "You need to spend more ETH!");
         // require(PriceConverter.getConversionRate(msg.value) >= MINIMUM_USD, "You need to spend more ETH!");
         s_addressToAmountFunded[msg.sender] += msg.value;
-        funders.push(msg.sender);
+        s_funders.push(msg.sender);
     }
     
     function getVersion() public view returns (uint256){
