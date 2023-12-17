@@ -16,7 +16,7 @@ module.exports = {
     },
     networks: {
         hardhat: {
-            chainId: 1337
+            chainId: 31337,
         },
         sepolia: {
             url: process.env.SEPOLIA_RPC_URL,
@@ -26,7 +26,7 @@ module.exports = {
         },
         localhost: {
             url: process.env.LOCALHOST_RPC_URL,
-            chainId: 31337,
+            chainId: 1337,
         },
     },
     etherscan: {
