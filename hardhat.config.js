@@ -3,6 +3,7 @@ require("dotenv").config()
 require("hardhat-gas-reporter")
 require("solidity-coverage")
 require("hardhat-deploy")
+require("@nomiclabs/hardhat-ethers") // ethers.getContractAt()
 
 /** @type import('hardhat/config').HardhatUserConfig */
 
