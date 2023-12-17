@@ -7,7 +7,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "./PriceConverter.sol";
 
 //Errors
-error NotOwner();
+error FundIndia_NotOwner();
 
 //Interfaces
 
@@ -37,7 +37,7 @@ contract FundIndia {
 
     modifier onlyOwner {
         // require(msg.sender == owner);
-        if (msg.sender != i_owner) revert NotOwner();
+        if (msg.sender != i_owner) revert FundIndia_NotOwner();
         _;
     }
 
