@@ -20,6 +20,7 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         from: deployer,
         log: true,
         args: args,
+        waitConfirmations: network.config.waitConfirmations || 1,
     })
 
     log(`FundIndia deployed at ${fundIndia.address}`)
