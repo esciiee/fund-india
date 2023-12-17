@@ -8,6 +8,7 @@ import "./PriceConverter.sol";
 
 //Errors
 error FundIndia_NotOwner();
+error FundIndia_EmptyFunders();
 
 //Interfaces
 
@@ -30,13 +31,13 @@ contract FundIndia {
     //append all immutable variables with i_
     //write constant variables in all caps
 
-    AggregatorV3Interface public s_priceFeed;
+    AggregatorV3Interface private s_priceFeed;
 
-    mapping(address => uint256) public s_addressToAmountFunded;
-    address[] public s_funders;
+    mapping(address => uint256) private s_addressToAmountFunded;
+    address[] private s_funders;
 
     // Could we make this constant?  /* hint: no! We should make it immutable! */
-    address public immutable i_owner;
+    address private immutable i_owner;
     uint256 public constant MINIMUM_USD = 50 * 10 ** 18;
 
     modifier onlyOwner {
@@ -80,8 +81,9 @@ contract FundIndia {
     }
     
     function withdraw() public onlyOwner {
-        for (uint256 funderIndex=0; funderIndex < s_funders.length; funderIndex++){
-            address funder = s_funders[funderIndex];
+        address[] memory funders = s_funders;
+        for (uint256 funderIndex=0; funderIndex < funders.length; funderIndex++){
+            address funder = funders[funderIndex];
             s_addressToAmountFunded[funder] = 0;
         }
         s_funders = new address[](0);
@@ -105,6 +107,29 @@ contract FundIndia {
     //   yes   no
     //  /        \
     //receive()  fallback()
+
+    //view and pure functions 
+
+    function getOwner() public view returns (address){
+        return i_owner;
+    }
+
+    function getFunder(uint256 index) public view returns (address){
+        return s_funders[index];
+    }
+
+    function getFunders() public view returns (address[] memory){
+        if(s_funders.length == 0) revert FundIndia_EmptyFunders();
+        return s_funders;
+    }
+
+    function getAddressToAmountFunded(address funder) public view returns (uint256){
+        return s_addressToAmountFunded[funder];
+    }
+
+    function getPriceFeed() public view returns (AggregatorV3Interface){
+        return s_priceFeed;
+    }
 }
 
 // Concepts we didn't cover yet (will cover in later sections)

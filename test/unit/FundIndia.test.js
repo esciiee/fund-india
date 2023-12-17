@@ -16,7 +16,7 @@ describe("FundIndia", async function () {
     })
     describe("constructor", async function () {
         it("should set the price feed address", async function () {
-            assert.equal(await fundIndia.s_priceFeed(), mockV3Aggregator.target)
+            assert.equal(await fundIndia.getPriceFeed(), mockV3Aggregator.target)
         })
     })
     describe("fund", async function () {
@@ -27,12 +27,12 @@ describe("FundIndia", async function () {
         })
         it("should update the balance of the contract", async function () {
             await fundIndia.fund({ value: sendValue })
-            const res = await fundIndia.s_addressToAmountFunded(deployer)
+            const res = await fundIndia.getAddressToAmountFunded(deployer)
             assert.equal(res, sendValue)
         })
         it("should add the sender to the funders array", async function () {
             await fundIndia.fund({ value: sendValue })
-            const res = await fundIndia.s_funders(0)
+            const res = (await fundIndia.getFunders())[0]
             assert.equal(res, deployer)
         })
     })
@@ -97,11 +97,15 @@ describe("FundIndia", async function () {
                 (afterDeployerBalance + gasCost).toString()
             )
 
-            await expect(fundIndia.s_funders(0)).to.be.reverted
+            // await expect(fundIndia.getFunders()[0]).to.be.reverted
+            await expect(fundIndia.getFunders()).to.be.revertedWithCustomError(
+                fundIndia,
+                "FundIndia_EmptyFunders"
+            )
 
             for (let i = 1; i < 6; i++) {
                 assert.equal(
-                    await fundIndia.s_addressToAmountFunded(accounts[i].address),
+                    await fundIndia.getAddressToAmountFunded(accounts[i].address),
                     0
                 )
             }
