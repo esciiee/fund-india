@@ -19,5 +19,18 @@
     "solhint": "^4.0.0",
     "solidity-coverage": "^0.8.5",
     "typechain": "^8.3.0"
+  },
+  "scripts": {
+    "clean": "yarn hardhat clean",
+    "compile": "yarn hardhat compile",
+    "test": "yarn hardhat test",
+    "lint": "yarn solhint \"./contracts/**/*.sol\"",
+    "lint:fix": "yarn run lint -- --fix",
+    "typechain": "yarn typechain",
+    "typechain:watch": "yarn hardhat typechain --watch",
+    "coverage": "yarn coverage",
+    "report": "yarn hardhat coverage && yarn solidity-coverage report",
+    "deploy": "yarn hardhat deploy --network sepolia",
+    "verify": "yarn hardhat verify --network sepolia"
   }
 }
